@@ -7,7 +7,7 @@
 <meta charset="utf-8"/>
 <title>archai.datasets.providers.imagenet_folder | Archai</title>
 <link href="../../../../_static/pygments.css" rel="stylesheet"/>
-<link href="../../../../_static/theme.33684ae9923d01874503.css" rel="stylesheet"/>
+<link href="../../../../_static/theme.e6081a2fb60dd7bf7015.css" rel="stylesheet"/>
 <link href="../../../../_static/css/custom.css" rel="stylesheet"/>
 <link href="../../../../_static/favicon.ico" rel="shortcut icon"/>
 <link href="../../../../search.html" rel="search" title="Search"/>
@@ -200,7 +200,7 @@
 </li>
 </ul>
 </div>
-<button class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center" data-action="" title="Close navigation menu">
+<button class="text-4xl text-gray-800 p-4 bottom-0 hover:text-brand xl:hidden focus:text-brand self-center" data-action="sidebar#close" title="Close navigation menu">
 <span class="sr-only">Close navigation menu</span>
 <svg aria-hidden="true" class="fill-current stroke-current h-6 w-6" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"></path></svg>
 </button>
@@ -229,15 +229,15 @@
 
 <span class="n">_ARCHIVE_DICT</span> <span class="o">=</span> <span class="p">{</span>
     <span class="s1">'train'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'url'</span><span class="p">:</span> <span class="s1">'http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_train.tar'</span><span class="p">,</span>
+        <span class="s1">'url'</span><span class="p">:</span> <span class="s1">'https://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_train.tar'</span><span class="p">,</span>
         <span class="s1">'md5'</span><span class="p">:</span> <span class="s1">'1d675b47d978889d74fa0da5fadfb00e'</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s1">'val'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'url'</span><span class="p">:</span> <span class="s1">'http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_val.tar'</span><span class="p">,</span>
+        <span class="s1">'url'</span><span class="p">:</span> <span class="s1">'https://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_img_val.tar'</span><span class="p">,</span>
         <span class="s1">'md5'</span><span class="p">:</span> <span class="s1">'29b22e2961454d5413ddabcf34fc5622'</span><span class="p">,</span>
     <span class="p">},</span>
     <span class="s1">'devkit'</span><span class="p">:</span> <span class="p">{</span>
-        <span class="s1">'url'</span><span class="p">:</span> <span class="s1">'http://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_devkit_t12.tar.gz'</span><span class="p">,</span>
+        <span class="s1">'url'</span><span class="p">:</span> <span class="s1">'https://www.image-net.org/challenges/LSVRC/2012/nnoupb/ILSVRC2012_devkit_t12.tar.gz'</span><span class="p">,</span>
         <span class="s1">'md5'</span><span class="p">:</span> <span class="s1">'fa75699e90414af021442c21a62c3abf'</span><span class="p">,</span>
     <span class="p">}</span>
 <span class="p">}</span>
@@ -245,7 +245,7 @@
 <span class="c1"># copy ILSVRC/ImageSets/CLS-LOC/train_cls.txt to ./root/</span>
 <span class="c1"># to skip os walk (it's too slow) using ILSVRC/ImageSets/CLS-LOC/train_cls.txt file</span>
 <div class="viewcode-block" id="ImageNetFolder"><a class="viewcode-back" href="../../../../reference/api/archai.datasets.providers.html#archai.datasets.providers.imagenet_folder.ImageNetFolder">[docs]</a><span class="k">class</span> <span class="nc">ImageNetFolder</span><span class="p">(</span><span class="n">torchvision</span><span class="o">.</span><span class="n">datasets</span><span class="o">.</span><span class="n">ImageFolder</span><span class="p">):</span>
-    <span class="sd">"""`ImageNetFolder &lt;http://image-net.org/&gt;`_ 2012 Classification Dataset.</span>
+    <span class="sd">"""`ImageNetFolder &lt;https://image-net.org/&gt;`_ 2012 Classification Dataset.</span>
 
 <span class="sd">    Args:</span>
 <span class="sd">        root (string): Root directory of the ImageNet Dataset.</span>
@@ -433,7 +433,7 @@
 </code></pre></div>
 </article>
 <footer>
-<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, Microsoft. Last updated: Jun 06, 2022. Made with <a href="https://www.sphinx-doc.org">Sphinx 4.5.0</a></div>
+<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, Microsoft. Last updated: Jul 01, 2022. Made with <a href="https://www.sphinx-doc.org">Sphinx 5.0.2</a></div>
 </footer><button aria-label="Scroll to top" class="fixed bottom-0 right-0 p-2 m-4 z-10 rounded-full bg-gray-700 text-white opacity-0 transition-opacity duration-1000 pointer-events-none hover:bg-gray-300 hover:text-link focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-gray-200 focus:text-link tooltipped tooltipped-nw" data-action="scroll#scrollToTop" data-scroll-target="scrollToTop">
 <svg class="fill-current stroke-current h-8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
@@ -447,7 +447,8 @@
 <script data-url_root="../../../../" id="documentation_options" src="../../../../_static/documentation_options.js"></script>
 <script src="../../../../_static/jquery.js"></script>
 <script src="../../../../_static/underscore.js"></script>
+<script src="../../../../_static/_sphinx_javascript_frameworks_compat.js"></script>
 <script src="../../../../_static/doctools.js"></script>
-<script src="../../../../_static/theme.1ba02c30758e6036ba31.js"></script>
+<script src="../../../../_static/theme.a9d041328d1560cbc665.js"></script>
 </body>
 </html>
