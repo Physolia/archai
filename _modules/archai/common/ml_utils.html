@@ -217,8 +217,10 @@
 <span class="c1"># Licensed under the MIT license.</span>
 
 <span class="kn">from</span> <span class="nn">typing</span> <span class="kn">import</span> <span class="n">Iterable</span><span class="p">,</span> <span class="n">Type</span><span class="p">,</span> <span class="n">MutableMapping</span><span class="p">,</span> <span class="n">Mapping</span><span class="p">,</span> <span class="n">Any</span><span class="p">,</span> <span class="n">Optional</span><span class="p">,</span> <span class="n">Tuple</span><span class="p">,</span> <span class="n">List</span><span class="p">,</span> <span class="n">Sequence</span>
+<span class="kn">from</span> <span class="nn">collections</span> <span class="kn">import</span> <span class="n">defaultdict</span><span class="p">,</span> <span class="n">Counter</span><span class="p">,</span> <span class="n">OrderedDict</span>
 <span class="kn">import</span>  <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
 <span class="kn">import</span> <span class="nn">math</span>
+<span class="kn">import</span> <span class="nn">gc</span>
 
 <span class="kn">import</span>  <span class="nn">torch</span>
 <span class="kn">from</span> <span class="nn">torch</span> <span class="kn">import</span> <span class="n">Tensor</span><span class="p">,</span> <span class="n">nn</span>
@@ -379,11 +381,11 @@
     <span class="k">else</span><span class="p">:</span>
         <span class="k">raise</span> <span class="ne">ValueError</span><span class="p">(</span><span class="s1">'criterian type "</span><span class="si">{}</span><span class="s1">" is not supported'</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="nb">type</span><span class="p">))</span></div>
 
-<div class="viewcode-block" id="param_size"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.ml_utils.param_size">[docs]</a><span class="k">def</span> <span class="nf">param_size</span><span class="p">(</span><span class="n">module</span><span class="p">:</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">):</span>
+<div class="viewcode-block" id="param_size"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.ml_utils.param_size">[docs]</a><span class="k">def</span> <span class="nf">param_size</span><span class="p">(</span><span class="n">module</span><span class="p">:</span><span class="n">nn</span><span class="o">.</span><span class="n">Module</span><span class="p">,</span> <span class="n">ignore_aux</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">only_req_grad</span><span class="o">=</span><span class="kc">False</span><span class="p">):</span>
     <span class="sd">"""count all parameters excluding auxiliary"""</span>
     <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="n">v</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span> <span class="k">for</span> <span class="n">name</span><span class="p">,</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">module</span><span class="o">.</span><span class="n">named_parameters</span><span class="p">()</span> \
-        <span class="k">if</span> <span class="s2">"auxiliary"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">)</span></div>
-
+        <span class="k">if</span> <span class="p">(</span><span class="ow">not</span> <span class="n">ignore_aux</span> <span class="ow">or</span> <span class="p">(</span><span class="s2">"auxiliary"</span> <span class="ow">not</span> <span class="ow">in</span> <span class="n">name</span><span class="p">))</span> \
+            <span class="ow">and</span> <span class="p">(</span><span class="ow">not</span> <span class="n">only_req_grad</span> <span class="ow">or</span> <span class="n">v</span><span class="o">.</span><span class="n">requires_grad</span><span class="p">))</span></div>
 
 <div class="viewcode-block" id="save_model"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.ml_utils.save_model">[docs]</a><span class="k">def</span> <span class="nf">save_model</span><span class="p">(</span><span class="n">model</span><span class="p">,</span> <span class="n">model_path</span><span class="p">):</span>
     <span class="c1">#logger.info('saved to model: {}'.format(model_path))</span>
@@ -445,10 +447,40 @@
     <span class="n">mean</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#size: [C]</span>
     <span class="n">std</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">std</span><span class="p">(</span><span class="n">l</span><span class="p">,</span> <span class="n">dim</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span> <span class="c1">#size: [C]</span>
     <span class="k">return</span> <span class="n">mean</span><span class="p">,</span> <span class="n">std</span></div>
+
+<div class="viewcode-block" id="clear_gpu_memory"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.ml_utils.clear_gpu_memory">[docs]</a><span class="k">def</span> <span class="nf">clear_gpu_memory</span><span class="p">():</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_objects</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="n">obj</span><span class="o">.</span><span class="n">cpu</span><span class="p">()</span>
+    <span class="n">gc</span><span class="o">.</span><span class="n">collect</span><span class="p">()</span>
+    <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">empty_cache</span><span class="p">()</span></div>
+
+<div class="viewcode-block" id="memory_allocated"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.ml_utils.memory_allocated">[docs]</a><span class="k">def</span> <span class="nf">memory_allocated</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">float</span><span class="p">:</span>
+    <span class="sd">"""Returns allocated memory on device in MBs"""</span>
+    <span class="k">if</span> <span class="n">device</span><span class="p">:</span>
+        <span class="n">device</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">device</span><span class="p">(</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">if</span> <span class="nb">max</span><span class="p">:</span>
+            <span class="n">alloc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">max_memory_allocated</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>
+            <span class="n">alloc</span> <span class="o">=</span> <span class="n">torch</span><span class="o">.</span><span class="n">cuda</span><span class="o">.</span><span class="n">memory_allocated</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="n">device</span><span class="p">)</span>
+        <span class="n">alloc</span> <span class="o">/=</span>  <span class="mi">1024</span> <span class="o">**</span> <span class="mi">2</span>
+        <span class="k">return</span> <span class="n">alloc</span></div>
+
+<div class="viewcode-block" id="print_memory_objects"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.ml_utils.print_memory_objects">[docs]</a><span class="k">def</span> <span class="nf">print_memory_objects</span><span class="p">(</span><span class="n">device</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="nb">max</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">-&gt;</span><span class="kc">None</span><span class="p">:</span>
+    <span class="n">numels</span> <span class="o">=</span> <span class="n">Counter</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">obj</span> <span class="ow">in</span> <span class="n">gc</span><span class="o">.</span><span class="n">get_objects</span><span class="p">():</span>
+        <span class="k">if</span> <span class="n">torch</span><span class="o">.</span><span class="n">is_tensor</span><span class="p">(</span><span class="n">obj</span><span class="p">):</span>
+            <span class="nb">print</span><span class="p">(</span><span class="nb">type</span><span class="p">(</span><span class="n">obj</span><span class="p">),</span> <span class="n">obj</span><span class="o">.</span><span class="n">size</span><span class="p">())</span>
+            <span class="n">numels</span><span class="p">[</span><span class="n">obj</span><span class="o">.</span><span class="n">device</span><span class="p">]</span> <span class="o">+=</span> <span class="n">obj</span><span class="o">.</span><span class="n">numel</span><span class="p">()</span>
+    <span class="nb">print</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">device</span><span class="p">,</span> <span class="n">numel</span> <span class="ow">in</span> <span class="nb">sorted</span><span class="p">(</span><span class="n">numels</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+        <span class="nb">print</span><span class="p">(</span><span class="s1">'</span><span class="si">%s</span><span class="s1">: </span><span class="si">%s</span><span class="s1"> elements, </span><span class="si">%.3f</span><span class="s1"> MBs'</span> <span class="o">%</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">device</span><span class="p">),</span> <span class="n">numel</span><span class="p">,</span> <span class="n">numel</span> <span class="o">*</span> <span class="mi">4</span> <span class="o">/</span> <span class="mi">1024</span> <span class="o">**</span> <span class="mi">2</span><span class="p">))</span></div>
 </code></pre></div>
 </article>
 <footer>
-<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, Microsoft. Last updated: Jul 01, 2022. Made with <a href="https://www.sphinx-doc.org">Sphinx 5.0.2</a></div>
+<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, Microsoft. Last updated: Aug 08, 2022. Made with <a href="https://www.sphinx-doc.org">Sphinx 5.1.1</a></div>
 </footer><button aria-label="Scroll to top" class="fixed bottom-0 right-0 p-2 m-4 z-10 rounded-full bg-gray-700 text-white opacity-0 transition-opacity duration-1000 pointer-events-none hover:bg-gray-300 hover:text-link focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-gray-200 focus:text-link tooltipped tooltipped-nw" data-action="scroll#scrollToTop" data-scroll-target="scrollToTop">
 <svg class="fill-current stroke-current h-8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>

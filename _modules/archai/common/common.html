@@ -297,7 +297,7 @@
     <span class="k">if</span> <span class="nb">isinstance</span><span class="p">(</span><span class="n">logger</span><span class="p">,</span> <span class="n">OrderedDictLogger</span><span class="p">):</span>
         <span class="n">logger</span><span class="o">.</span><span class="n">close</span><span class="p">()</span></div>
 
-<span class="k">def</span> <span class="nf">_pt_dirs</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
+<div class="viewcode-block" id="pt_dirs"><a class="viewcode-back" href="../../../reference/api/archai.common.html#archai.common.common.pt_dirs">[docs]</a><span class="k">def</span> <span class="nf">pt_dirs</span><span class="p">()</span><span class="o">-&gt;</span><span class="n">Tuple</span><span class="p">[</span><span class="nb">str</span><span class="p">,</span> <span class="nb">str</span><span class="p">]:</span>
     <span class="c1"># dirs for pt infrastructure are supplied in env vars</span>
 
     <span class="n">pt_data_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'PT_DATA_DIR'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
@@ -314,10 +314,10 @@
 
     <span class="n">pt_output_dir</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">environ</span><span class="o">.</span><span class="n">get</span><span class="p">(</span><span class="s1">'PT_OUTPUT_DIR'</span><span class="p">,</span> <span class="s1">''</span><span class="p">)</span>
 
-    <span class="k">return</span> <span class="n">pt_data_dir</span><span class="p">,</span> <span class="n">pt_output_dir</span>
+    <span class="k">return</span> <span class="n">pt_data_dir</span><span class="p">,</span> <span class="n">pt_output_dir</span></div>
 
 <span class="k">def</span> <span class="nf">_pt_params</span><span class="p">(</span><span class="n">param_args</span><span class="p">:</span> <span class="nb">list</span><span class="p">)</span><span class="o">-&gt;</span><span class="nb">list</span><span class="p">:</span>
-    <span class="n">pt_data_dir</span><span class="p">,</span> <span class="n">pt_output_dir</span> <span class="o">=</span> <span class="n">_pt_dirs</span><span class="p">()</span>
+    <span class="n">pt_data_dir</span><span class="p">,</span> <span class="n">pt_output_dir</span> <span class="o">=</span> <span class="n">pt_dirs</span><span class="p">()</span>
 
     <span class="k">if</span> <span class="n">pt_output_dir</span><span class="p">:</span>
         <span class="c1"># prepend so if supplied from outside it takes back seat</span>
@@ -517,7 +517,7 @@
         <span class="k">raise</span> <span class="ne">RuntimeError</span><span class="p">(</span><span class="s1">'The logdir setting must be specified for the output directory in yaml'</span><span class="p">)</span>
 
     <span class="c1"># get cloud dirs if any</span>
-    <span class="n">pt_data_dir</span><span class="p">,</span> <span class="n">pt_output_dir</span> <span class="o">=</span> <span class="n">_pt_dirs</span><span class="p">()</span>
+    <span class="n">pt_data_dir</span><span class="p">,</span> <span class="n">pt_output_dir</span> <span class="o">=</span> <span class="n">pt_dirs</span><span class="p">()</span>
 
     <span class="c1"># validate dirs</span>
     <span class="k">assert</span> <span class="ow">not</span> <span class="n">pt_output_dir</span> <span class="ow">or</span> <span class="ow">not</span> <span class="n">expdir</span><span class="o">.</span><span class="n">startswith</span><span class="p">(</span><span class="n">utils</span><span class="o">.</span><span class="n">full_path</span><span class="p">(</span><span class="s1">'~/logdir'</span><span class="p">))</span>
@@ -574,7 +574,7 @@
 </code></pre></div>
 </article>
 <footer>
-<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, Microsoft. Last updated: Jul 01, 2022. Made with <a href="https://www.sphinx-doc.org">Sphinx 5.0.2</a></div>
+<div class="mt-20 mb-4 text-sm text-gray-700">© 2022, Microsoft. Last updated: Aug 08, 2022. Made with <a href="https://www.sphinx-doc.org">Sphinx 5.1.1</a></div>
 </footer><button aria-label="Scroll to top" class="fixed bottom-0 right-0 p-2 m-4 z-10 rounded-full bg-gray-700 text-white opacity-0 transition-opacity duration-1000 pointer-events-none hover:bg-gray-300 hover:text-link focus:outline-none focus:ring-2 focus:ring-blue-600 focus:bg-gray-200 focus:text-link tooltipped tooltipped-nw" data-action="scroll#scrollToTop" data-scroll-target="scrollToTop">
 <svg class="fill-current stroke-current h-8" viewbox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
 <path d="M7.41 15.41L12 10.83l4.59 4.58L18 14l-6-6-6 6z"></path>
